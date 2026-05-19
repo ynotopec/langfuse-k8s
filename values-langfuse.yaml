@@ -1,0 +1,128 @@
+global:
+  security:
+    allowInsecureImages: true
+
+langfuse:
+  logging:
+    level: info
+    format: text
+
+  features:
+    telemetryEnabled: false
+    signUpDisabled: false
+
+  salt:
+    value: "${SECRET_REMOVED}="
+  encryptionKey:
+    value: "${SECRET_REMOVED}"
+  nextauth:
+    secret:
+      value: "${SECRET_REMOVED}="
+    url: "https://langfuse.example.com"
+
+  ingress:
+    enabled: true
+    className: public
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    hosts:
+      - host: langfuse.example.com
+        paths:
+          - path: /
+            pathType: Prefix
+    tls:
+      enabled: true
+      secretName: langfuse-tls
+
+  deployment:
+    replicas: 1
+
+  web:
+    replicas: 2
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+    hpa:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 4
+      targetCPUUtilizationPercentage: 50
+
+  worker:
+    replicas: 4
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+    hpa:
+      enabled: true
+      minReplicas: 4
+      maxReplicas: 12
+      targetCPUUtilizationPercentage: 50
+
+postgresql:
+  deploy: true
+  auth:
+    username: postgres
+    password: "${SECRET_REMOVED}"
+    database: postgres_langfuse
+  primary:
+    persistence:
+      enabled: true
+      size: 20Gi
+    resources:
+      requests:
+        cpu: "1"
+        memory: "2Gi"
+      limits:
+        cpu: "2"
+        memory: "4Gi"
+
+redis:
+  deploy: true
+  auth:
+    username: default
+    password: "${SECRET_REMOVED}"
+  primary:
+    extraFlags:
+      - "--maxmemory-policy noeviction"
+    persistence:
+      enabled: true
+      size: 8Gi
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "1Gi"
+      limits:
+        cpu: "1"
+        memory: "2Gi"
+
+clickhouse:
+  deploy: true
+  shards: 1
+  replicaCount: 1
+  auth:
+    username: default
+    password: "${SECRET_REMOVED}"
+  persistence:
+    enabled: true
+    size: 50Gi
+  resourcesPreset: large
+
+s3:
+  deploy: true
+  bucket: langfuse
+  auth:
+    rootUser: minio
+    rootPassword: "${SECRET_REMOVED}"
+  defaultBuckets: langfuse
+  persistence:
+    enabled: true
+    size: 50Gi
