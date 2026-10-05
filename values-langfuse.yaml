@@ -1,3 +1,11 @@
+# Configuration Langfuse — SANS SECRETS.
+# Les secrets (salt, encryptionKey, nextauth, mots de passe DB) sont fournis
+# par values-secrets.yaml (généré par ./generate.sh, ignoré par git).
+#
+# Installation :
+#   helm upgrade --install langfuse langfuse/langfuse -n langfuse \
+#     -f values-langfuse.yaml -f values-secrets.yaml --wait --timeout 15m
+
 global:
   security:
     allowInsecureImages: true
@@ -11,13 +19,7 @@ langfuse:
     telemetryEnabled: false
     signUpDisabled: false
 
-  salt:
-    value: "${SECRET_REMOVED}="
-  encryptionKey:
-    value: "${SECRET_REMOVED}"
   nextauth:
-    secret:
-      value: "${SECRET_REMOVED}="
     url: "https://langfuse.example.com"
 
   ingress:
@@ -71,7 +73,6 @@ postgresql:
   deploy: true
   auth:
     username: postgres
-    password: "__CHANGE_ME__"
     database: postgres_langfuse
   primary:
     persistence:
@@ -89,7 +90,6 @@ redis:
   deploy: true
   auth:
     username: default
-    password: "__CHANGE_ME__"
   primary:
     extraFlags:
       - "--maxmemory-policy noeviction"
@@ -110,7 +110,6 @@ clickhouse:
   replicaCount: 1
   auth:
     username: default
-    password: "__CHANGE_ME__"
   persistence:
     enabled: true
     size: 50Gi
@@ -121,7 +120,6 @@ s3:
   bucket: langfuse
   auth:
     rootUser: minio
-    rootPassword: "__CHANGE_ME__"
   defaultBuckets: langfuse
   persistence:
     enabled: true
