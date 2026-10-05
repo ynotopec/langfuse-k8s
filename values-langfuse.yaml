@@ -71,7 +71,7 @@ postgresql:
   deploy: true
   auth:
     username: postgres
-    password: "${SECRET_REMOVED}"
+    password: "__CHANGE_ME__"
     database: postgres_langfuse
   primary:
     persistence:
@@ -89,7 +89,7 @@ redis:
   deploy: true
   auth:
     username: default
-    password: "${SECRET_REMOVED}"
+    password: "__CHANGE_ME__"
   primary:
     extraFlags:
       - "--maxmemory-policy noeviction"
@@ -110,7 +110,7 @@ clickhouse:
   replicaCount: 1
   auth:
     username: default
-    password: "${SECRET_REMOVED}"
+    password: "__CHANGE_ME__"
   persistence:
     enabled: true
     size: 50Gi
@@ -121,7 +121,7 @@ s3:
   bucket: langfuse
   auth:
     rootUser: minio
-    rootPassword: "${SECRET_REMOVED}"
+    rootPassword: "__CHANGE_ME__"
   defaultBuckets: langfuse
   persistence:
     enabled: true
