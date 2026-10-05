@@ -59,29 +59,26 @@ helm repo add langfuse https://langfuse.github.io/langfuse-k8s
 helm repo update
 ```
 
-Générer les secrets et le fichier de valeurs :
+Générer les secrets (dans `.env` et `values-secrets.yaml`, tous deux ignorés par git) :
 
 ```bash
 ./generate.sh
 ```
 
-Cela crée `.env` (ignoré par git, permissions 600) avec les secrets aléatoires, puis `values-langfuse.yaml`.
-
-Pour régénérer de nouveaux secrets :
-
-```bash
-./generate.sh
-```
-
-Installer ou upgrader :
+Installer ou upgrader (fusion des deux fichiers de valeurs) :
 
 ```bash
 helm upgrade --install langfuse langfuse/langfuse \
   -n langfuse \
   -f values-langfuse.yaml \
+  -f values-secrets.yaml \
   --wait \
   --timeout 15m
 ```
+
+> **Note sécurité** : `values-langfuse.yaml` (commité) ne contient aucun secret.
+> Tous les secrets vivent dans `values-secrets.yaml` et `.env` (gitignored, chmod 600).
+> Ne jamais commiter `values-secrets.yaml`.
 
 ---
 
